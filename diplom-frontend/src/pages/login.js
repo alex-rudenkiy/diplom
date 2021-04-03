@@ -1,5 +1,5 @@
 import logo from '../resources/logo.png';
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Col, Image, Row} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css';
@@ -46,9 +46,17 @@ import Container from "@material-ui/core/Container";
 import 'video-react/dist/video-react.css'; // import css
 import { Player } from 'video-react';
 import ReactPlayer from 'react-player/lazy'
+import HeaderNav from "../components/headerNav";
+import {Link} from "react-router-dom";
+import useBackendApi from "../logic/BackendApiHook";
 
 
 function LoginPage() {
+    const { authentication, registration, fileUpload, getUserInfo, checkAuth } = useBackendApi();
+    const [ textFieldsData, settextFieldsData ] = useState({"remember":false});
+
+    useEffect(() => {checkAuth()},[])
+
     const EmbedsPage = () => {
         return (
             <Container >
@@ -76,27 +84,7 @@ function LoginPage() {
             <RegistrationCarousel/>
 */}
             <div>
-                <Navbar className={"mb-5"} bg="none" expand="lg">
-                    <Navbar.Brand href="#home"><img style={{width: "235px"}} src={logo}/></Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="mr-auto">
-                            <Nav.Link href="#home">Доска почёта</Nav.Link>
-                            <Nav.Link href="#link1">Карта проблем</Nav.Link>
-                            <Nav.Link href="#link">Архив проблем</Nav.Link>
-                            <NavDropdown title="Помощь" id="basic-nav-dropdown">
-                                <NavDropdown.Item href="#action/3.1"></NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2"></NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.3">Архив проблем</NavDropdown.Item>
-                                <NavDropdown.Divider/>
-                                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                            </NavDropdown>
-                        </Nav>
-                        <Form>
-                            <Button variant="btn btn-outline-primary">Войти в личный кабинет</Button>
-                        </Form>
-                    </Navbar.Collapse>
-                </Navbar>
+                <HeaderNav/>
 
                 {/*Page Content*/}
                 <section className="pb-5 pt-5">
@@ -110,24 +98,39 @@ function LoginPage() {
                                 <h2 className="font-weight-light" > Авторизация </h2>
 
                                 <div className="mt-5" >
-                                    <TextField id="input-with-icon-grid" label={<p><AccountCircle /> &nbsp; Почта/логин</p>} variant="filled" fullWidth/>
-                                    <TextField id="input-with-icon-grid" label={<p><KeyIcon /> &nbsp; Пароль</p>} variant="filled" fullWidth/>
+                                    <TextField id="input-with-icon-grid" label={<p><AccountCircle /> &nbsp; Почта/логин</p>} variant="filled" fullWidth onChange={e=>{settextFieldsData({...textFieldsData,...{"loginOrMobile":e.target.value}})}}/>
+                                    <TextField id="input-with-icon-grid" label={<p><KeyIcon /> &nbsp; Пароль</p>} variant="filled" fullWidth onChange={e=>{settextFieldsData({...textFieldsData,...{"password":e.target.value}})}}/>
                                 </div>
+
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            //checked={state.checkedB}
+                                            onChange={e=>settextFieldsData({...textFieldsData,...{"remember":e.target.checked}})}
+                                            color="primary"
+
+                                        />
+                                    }
+                                    label="Запомнить пароль"
+                                    style={{marginLeft: "0em",
+                                        marginRight: "auto",
+                                        display: "flex"}}
+                                />
 
                                 <div className="mt-3">
                                 <DividerWithText> или </DividerWithText>
                                 </div>
 
                                 <Row className="d-flex justify-content-center">
-                                    <IconButton style={{width:"2.5em", height:"2.5em"}} color="primary" aria-label="add to shopping cart">
+                                    <IconButton style={{width:"2.5em", height:"2.5em"}} color="primary" aria-label="add to shopping cart" onClick={event =>  window.location.href='http://localhost:8090/oauth2/authorization/google'}>
                                         <Image src={vkIcon} style={{width:"2.5em"}}/>
                                     </IconButton>
 
-                                    <IconButton style={{width:"2.6em", height:"2.6em"}} color="primary" aria-label="add to shopping cart">
+                                    <IconButton style={{width:"2.6em", height:"2.6em"}} color="primary" aria-label="add to shopping cart" onClick={event =>  window.location.href='http://localhost:8090/oauth2/authorization/google'}>
                                         <Image src={googleIcon} style={{width:"3em"}}/>
                                     </IconButton>
 
-                                    <IconButton style={{width:"2.5em", height:"2.5em"}} color="primary" aria-label="add to shopping cart">
+                                    <IconButton style={{width:"2.5em", height:"2.5em"}} color="primary" aria-label="add to shopping cart" onClick={event =>  window.location.href='http://localhost:8090/oauth2/authorization/google'}>
                                         <Image src={okIcon} style={{width:"1.8em", height:"1.8em"}}/>
                                     </IconButton>
                                 </Row>
@@ -152,9 +155,10 @@ function LoginPage() {
 
                                 <div class="d-flex bd-highlight mt-4">
 
-                                    <button type="button"  className="btn btn-outline-primary p-2 w-100 bd-highlight" style={{}}>Войти</button>
+                                    <button type="button" className="btn btn-outline-primary p-2 w-100 bd-highlight" onClick={()=>authentication(textFieldsData)} style={{}}>Войти</button>
+                                        {/*authentication(textFieldsData)*/}
 
-                                    <button type="button" className="btn btn-none p-2 flex-shrink-1 bd-highlight" style={{float:"right", color:"#a7a7a7"}}>зарегистрироваться</button>
+                                    <Link to="/registration" style={{color:'inherit'}}><button type="button" className="btn btn-none p-2 flex-shrink-1 bd-highlight" style={{float:"right", color:"#a7a7a7"}}>зарегистрироваться</button></Link>
                                 </div>
 
 

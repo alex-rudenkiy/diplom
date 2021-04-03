@@ -1,0 +1,14 @@
+package com.diplom.backend.database.entity;
+
+import javax.persistence.Column;
+import java.util.Date;
+
+public class Support {
+    @Column(name = "created_at")
+    private Date created_at;
+
+    @Column(name = "confirmed")
+    private Date created_at;
+
+
+}

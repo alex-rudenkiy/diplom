@@ -57,6 +57,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CloseIcon from '@material-ui/icons/Close';
+import {Link} from "react-router-dom";
+import HeaderNav from "../components/headerNav";
 
 function ProblemsStorePage() {
 
@@ -70,56 +72,7 @@ function ProblemsStorePage() {
     return (
         <div className="App">
 
-            <div className="d-md-none">
-                <nav class="navbar navbar-expand-lg navbar-light bg-light shadow fixed-top">
-                    <div class="container">
-                        <a class="navbar-brand" href="#">Start Bootstrap</a>
-                        <button class="navbar-toggler" type="button" data-toggle="collapse"
-                                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-                                aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarResponsive">
-                            <ul class="navbar-nav ml-auto">
-                                <li class="nav-item active">
-                                    <a class="nav-link" href="#">Home
-                                        <span class="sr-only">(current)</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">About</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Services</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">Contact</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
 
-                <header class="masthead">
-                    <div class="container h-100">
-                        <div class="row h-100 align-items-center">
-                            <div class="col-12 text-center">
-                                <h1 class="font-weight-light">Vertically Centered Masthead Content</h1>
-                                <p class="lead">A great starter layout for a landing page</p>
-                            </div>
-                        </div>
-                    </div>
-                </header>
-
-                <section class="py-5">
-                    <div class="container">
-                        <h2 class="font-weight-light">Page Content</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus ab nulla dolorum autem
-                            nisi officiis blanditiis voluptatem hic, assumenda aspernatur facere ipsam nemo ratione
-                            cumque magnam enim fugiat reprehenderit expedita.</p>
-                    </div>
-                </section>
-            </div>
 
 
 
@@ -370,27 +323,7 @@ function ProblemsStorePage() {
 
 
             <div>
-                <Navbar className={"mb-5"} bg="none" expand="lg">
-                    <Navbar.Brand href="#home"><img style={{width: "235px"}} src={logo}/></Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="mr-auto">
-                            <Nav.Link href="#home">Доска почёта</Nav.Link>
-                            <Nav.Link href="#link1">Карта проблем</Nav.Link>
-                            <Nav.Link href="#link">Архив проблем</Nav.Link>
-                            <NavDropdown title="Помощь" id="basic-nav-dropdown">
-                                <NavDropdown.Item href="#action/3.1"></NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2"></NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.3">Архив проблем</NavDropdown.Item>
-                                <NavDropdown.Divider/>
-                                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                            </NavDropdown>
-                        </Nav>
-                        <Form>
-                            <Button variant="btn btn-outline-primary ">Войти в личный кабинет</Button>
-                        </Form>
-                    </Navbar.Collapse>
-                </Navbar>
+                <HeaderNav/>
 
 
                 {/*<IconButton aria-label="delete">

@@ -30,8 +30,13 @@ import SponsorLogo from "../components/SponsorLogo";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from "react-router-dom";
+import HeaderNav from "../components/headerNav";
+import useBackendApi from "../logic/BackendApiHook";
+import CanvasDraw from "react-canvas-draw";
+import { ReactSketchCanvas } from "react-sketch-canvas";
 
 function WelcomePage() {
+
     const history = useHistory();
 
     function handleClick1() {
@@ -42,35 +47,29 @@ function WelcomePage() {
         history.push("/request");
     }
 
+    const styles = {
+        border: "0.0625rem solid #9c9c9c",
+        borderRadius: "0.25rem",
+    };
+
     return (
         <div className="App">
 
             <div>
 
+                <CanvasDraw />
+                <ReactSketchCanvas
+                    style={styles}
+                    width="600"
+                    height="400"
+                    strokeWidth={4}
+                    strokeColor="red"
+                />
 
 
                 <header className="masthead">
-                    <Navbar className={"mb-5"} bg="none" expand="lg">
-                        <Navbar.Brand href="#home"><img style={{width: "235px"}} src={logo}/></Navbar.Brand>
-                        <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                        <Navbar.Collapse id="basic-navbar-nav">
-                            <Nav className="mr-auto">
-                                <Nav.Link href="#home">Доска почёта</Nav.Link>
-                                <Nav.Link href="#link1">Карта проблем</Nav.Link>
-                                <Nav.Link href="#link">Архив проблем</Nav.Link>
-                                <NavDropdown title="Помощь" id="basic-nav-dropdown">
-                                    <NavDropdown.Item href="#action/3.1"></NavDropdown.Item>
-                                    <NavDropdown.Item href="#action/3.2"></NavDropdown.Item>
-                                    <NavDropdown.Item href="#action/3.3">Архив проблем</NavDropdown.Item>
-                                    <NavDropdown.Divider/>
-                                    <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                                </NavDropdown>
-                            </Nav>
-                            <Form>
-                                <Button variant="btn btn-outline-primary">Войти в личный кабинет</Button>
-                            </Form>
-                        </Navbar.Collapse>
-                    </Navbar>
+
+                    <HeaderNav/>
 
                     {/*<div className="container h-100">*/}
                         {/*Page Content*/}

@@ -63,6 +63,7 @@ import googleIcon from "../resources/google_icon.svg";
 import DoneAllIcon from '@material-ui/icons/DoneAll';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import DateRangeIcon from '@material-ui/icons/DateRange';
+import HeaderNav from "../components/headerNav";
 
 function LeaderBoardPage() {
 
@@ -150,27 +151,7 @@ function LeaderBoardPage() {
 
 
             <div>
-                <Navbar className={"mb-5"} bg="none" expand="lg">
-                    <Navbar.Brand href="#home"><img style={{width: "235px"}} src={logo}/></Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="mr-auto">
-                            <Nav.Link href="#home">Доска почёта</Nav.Link>
-                            <Nav.Link href="#link1">Карта проблем</Nav.Link>
-                            <Nav.Link href="#link">Архив проблем</Nav.Link>
-                            <NavDropdown title="Помощь" id="basic-nav-dropdown">
-                                <NavDropdown.Item href="#action/3.1"></NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2"></NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.3">Архив проблем</NavDropdown.Item>
-                                <NavDropdown.Divider/>
-                                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                            </NavDropdown>
-                        </Nav>
-                        <Form>
-                            <Button variant="btn btn-outline-primary ">Войти в личный кабинет</Button>
-                        </Form>
-                    </Navbar.Collapse>
-                </Navbar>
+                <HeaderNav/>
 
 
                 {/*<IconButton aria-label="delete">

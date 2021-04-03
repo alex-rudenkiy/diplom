@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -10,13 +10,14 @@ import WelcomePage from "./pages/welcome"
 import AdminPage from "./pages/admin";
 import RequestControlPanel from "./pages/requestControlPanel";
 import OrderingPage from "./pages/ordering";
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import {createMuiTheme, ThemeProvider} from '@material-ui/core/styles';
 import green from "@material-ui/core/colors/green";
 import blue from "@material-ui/core/colors/blue";
 import LeaderBoardPage from "./pages/leaderBoard";
 import RegistrationPage from "./pages/registration";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import {BrowserRouter as Router, Route} from "react-router-dom";
 import SettingsPage from "./pages/settings";
+import useBackendApi from './logic/BackendApiHook'
 
 const theme = createMuiTheme({
     palette: {
@@ -26,46 +27,49 @@ const theme = createMuiTheme({
     },
 });
 
+//
+
 ReactDOM.render(
-  <React.StrictMode>
-      <ThemeProvider theme={theme}>
+    <React.StrictMode>
+        {/*<ApiContext.Provider>*/}
+            <ThemeProvider theme={theme}>
 
-          <Router>
-              <div>
-                  <Route exact path="/">
-                      <WelcomePage />
-                  </Route>
-                  <Route path="/myProfile">
-                      <UserProfilePage />
-                  </Route>
-                  <Route path="/makeRequest">
-                      <OrderingPage />
-                  </Route>
-                  <Route path="/request">
-                      <RequestControlPanel />
-                  </Route>
-                  <Route path="/login">
-                      <LoginPage />
-                  </Route>
-                  <Route path="/registration">
-                      <RegistrationPage />
-                  </Route>
-                  <Route path="/reportWebVitals">
-                      <reportWebVitals />
-                  </Route>
-                  <Route path="/archive">
-                      <ProblemsStorePage />
-                  </Route>
-                  <Route path="/settings">
-                      <SettingsPage />
-                  </Route>
+                <Router>
+                    <div>
+                        <Route exact path="/">
+                            <WelcomePage/>
+                        </Route>
+                        <Route path="/profile">
+                            <UserProfilePage/>
+                        </Route>
+                        <Route path="/makeRequest">
+                            <OrderingPage/>
+                        </Route>
+                        <Route path="/request">
+                            <RequestControlPanel/>
+                        </Route>
+                        <Route path="/login">
+                            <LoginPage/>
+                        </Route>
+                        <Route path="/registration">
+                            <RegistrationPage/>
+                        </Route>
+                        <Route path="/archive">
+                            <ProblemsStorePage/>
+                        </Route>
+                        <Route path="/settings">
+                            <SettingsPage/>
+                        </Route>
+                        <Route path="/community">
+                            <LeaderBoardPage/>
+                        </Route>
 
-
-              </div>
-          </Router>
-      </ThemeProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+                    </div>
+                </Router>
+            </ThemeProvider>
+        {/*</ApiContext.Provider>*/}
+    </React.StrictMode>,
+    document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

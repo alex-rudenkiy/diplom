@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "cors.allowedOrings",
+      "type": "java.lang.String",
+      "defaultValue": "http://localhost:8090,http://example.com",
+      "description": "Description for cors.allowedOrings.",
+    }
+  ] }

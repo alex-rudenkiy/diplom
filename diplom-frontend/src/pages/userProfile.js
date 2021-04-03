@@ -1,5 +1,5 @@
 import logo from '../resources/logo.png';
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Carousel, Col, Image, Row} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css';
@@ -40,41 +40,33 @@ import vkIcon from "../resources/vk_icon.svg";
 import googleIcon from "../resources/google_icon.svg";
 import okIcon from "../resources/ok_icon.svg";
 import Badge from "@material-ui/core/Badge";
+import HeaderNav from "../components/headerNav";
+import {UserAvatar} from "../components/UserAvatar";
+import useBackendApi from "../logic/BackendApiHook";
 
 function UserProfilePage() {
     var Carousel = require('react-responsive-carousel').Carousel;
+    const { authentication, registration, fileUpload, getUserInfo, checkAuth } = useBackendApi();
+    const [userInfo, setUserInfo] = useState();
+    useEffect(() => {
+        getUserInfo().then(e=>console.log("gg", e));
+
+        getUserInfo().then(e=>setUserInfo(e));
+    },[]);
+
+
 
     return (
 
         <div className="App">
 
             <div>
-                <Navbar className={"mb-5"} bg="none" expand="lg">
-                    <Navbar.Brand href="#home"><img style={{width: "235px"}} src={logo}/></Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="mr-auto">
-                            <Nav.Link href="#home">Доска почёта</Nav.Link>
-                            <Nav.Link href="#link1">Карта проблем</Nav.Link>
-                            <Nav.Link href="#link">Архив проблем</Nav.Link>
-                            <NavDropdown title="Помощь" id="basic-nav-dropdown">
-                                <NavDropdown.Item href="#action/3.1"></NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2"></NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.3">Архив проблем</NavDropdown.Item>
-                                <NavDropdown.Divider/>
-                                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                            </NavDropdown>
-                        </Nav>
-                        <Form>
-                            <Button variant="btn btn-outline-primary">Войти в личный кабинет</Button>
-                        </Form>
-                    </Navbar.Collapse>
-                </Navbar>
+                <HeaderNav/>
 
 
 
-                <section className="pb-5 pt-0">
-                    <div className="container pl-sm-5">
+                <section className="pb-5 mt-4">
+                    <div className="container pl-sm-5 mt-5">
                         <div className="container">
                             <div className="row">
                                 <div className="col">
@@ -83,16 +75,16 @@ function UserProfilePage() {
                                     <div className="container">
                                         <div className="row">
                                             <div className="col-sm">
-                                                <h5 style={{color:"#276dd5"}}>84</h5>
+                                                <h5 style={{color:"#276dd5"}}>{userInfo&&userInfo.observation.length}</h5>
                                                 <p style={{lineHeight: "1em", color:"#6c6c6c"}}>Выявленно недостатков</p>
                                             </div>
                                             <div className="col-sm">
-                                                <h5 style={{color:"#276dd5"}}>84</h5>
-                                                <p style={{lineHeight: "1em", color:"#6c6c6c"}}>Выявленно недостатков</p>
+                                                <h5 style={{color:"#276dd5"}}>{userInfo&&userInfo.supporting.length}</h5>
+                                                <p style={{lineHeight: "1em", color:"#6c6c6c"}}>Устраненил недостатков</p>
                                             </div>
                                             <div className="col-sm">
-                                                <h5 style={{color:"#276dd5"}}>84</h5>
-                                                <p style={{lineHeight: "1em", color:"#6c6c6c"}}>Выявленно недостатков</p>
+                                                <h5 style={{color:"#276dd5"}}>{84}</h5>
+                                                <p style={{lineHeight: "1em", color:"#6c6c6c"}}>Место в общем рейтинге</p>
                                             </div>
                                         </div>
                                     </div>
@@ -101,29 +93,14 @@ function UserProfilePage() {
                                 </div>
                                 <div className="col-2">
 
-                                    <Badge
-                                        overlap="circle"
-                                        anchorOrigin={{
-                                            vertical: 'bottom',
-                                            horizontal: 'right',
-                                        }}
-                                        badgeContent={<Row><IconButton style={{width:"1em", height:"1em", padding:"0"}} color="primary" aria-label="add to shopping cart">
-                                            <Image src={vkIcon} style={{width:"2em"}}/>
-                                        </IconButton><IconButton style={{width:"1em", height:"1em", padding:"0"}} color="primary" aria-label="add to shopping cart">
-                                            <Image src={googleIcon} style={{width:"2em"}}/>
-                                        </IconButton></Row>
-                                        }
-                                    >
-                                        <Avatar alt="Remy Sharp" src={avatar} style={{width:"5em", height:"5em", margin:"auto"}}/>
+                                    <UserAvatar withlinks/>
 
-                                    </Badge>
 
 
                                 </div>
                                 <div className="col text-left">
-                                    <h4 style={{color:"#6c6c6c"}}>Астахов Виктор</h4>
-                                    <h5 style={{color:"#bfb8b8"}}>@astah84ru</h5>
-
+                                    <h4 className={"my-0"} style={{color:"#6c6c6c"}}>{`${userInfo&&userInfo.name} ${userInfo&&userInfo.patronymic}`}</h4>
+                                    <h5 className={"my-0"} style={{color:"#bfb8b8"}}>{`@${userInfo&&userInfo.login}`}</h5>
                                 </div>
                             </div>
                         </div>
@@ -138,7 +115,7 @@ function UserProfilePage() {
                                 <div className="container pl-sm-5 text-left">
 
                                     <p>Описание</p>
-                                    <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.  </h5>
+                                    <h5>{userInfo&&userInfo.description}</h5>
                                 </div>
                             </div>
                             <div className="col-6">

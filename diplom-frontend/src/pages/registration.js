@@ -1,5 +1,5 @@
 import logo from '../resources/logo.png';
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Button, Col, Image, Row} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css';
@@ -41,105 +41,32 @@ import RegistrationCarousel from "../components/RegistrationCarousel";
 import {useDropzone} from "react-dropzone";
 import ImageCropper from "../components/ImageCropper";
 import Modal from "react-bootstrap/Modal";
+import HeaderNav from "../components/headerNav";
+import useBackendApi from "../logic/BackendApiHook";
+import SocialNetworkUsing from "../components/SocialNetworkUsing";
+import axios from 'axios';
+import {AvatarDragAndDropUploader} from "../components/AvatarDragAndDropUploader";
+// import {ApiContext} from "../index";
 
 
-const thumbsContainer = {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: 16
-};
 
-const thumb = {
-    display: 'inline-flex',
-    borderRadius: 2,
-    border: '1px solid #eaeaea',
-    marginBottom: 8,
-    marginRight: 8,
-    width: 100,
-    height: 100,
-    padding: 4,
-    boxSizing: 'border-box'
-};
 
-const thumbInner = {
-    display: 'flex',
-    minWidth: 0,
-    overflow: 'hidden'
-};
 
-const img = {
-    display: 'block',
-    width: 'auto',
-    height: '100%'
-};
 
-function Previews(props) {
-    const [files, setFiles] = useState([]);
-    const {getRootProps, getInputProps} = useDropzone({
-        accept: 'image/*',
-        onDrop: acceptedFiles => {
-            setFiles(acceptedFiles.map(file => Object.assign(file, {
-                preview: URL.createObjectURL(file)
-            })));
-        }
-    });
-
-    const thumbs = files.map(file => (
-        <div style={thumb} key={file.name}>
-            <div style={thumbInner}>
-                <img
-                    src={file.preview}
-                    style={img}
-                />
-            </div>
-        </div>
-    ));
-
-    useEffect(() => () => {
-        // Make sure to revoke the data uris to avoid memory leaks
-        files.forEach(file => URL.revokeObjectURL(file.preview));
-    }, [files]);
-
-    return (
-        <section className="container">
-            <div {...getRootProps({className: 'dropzone'})}>
-                <input {...getInputProps()} />
-                <p>Перетащите сюда несколько файлов или щелкните, чтобы выбрать файлы</p>
-            </div>
-            <aside style={thumbsContainer}>
-                {thumbs}
-            </aside>
-        </section>
-    );
-}
 
 function RegistrationPage() {
+    //const {authentication, registration} = useContext(ApiContext);
+    const { authentication, registration, fileUpload } = useBackendApi();
+        const [ textFieldsData, settextFieldsData ] = useState({});
+
+
+
+
     return (
         <div className="App">
             {/*<RegistrationCarousel/>*/}
             <div>
-                <Navbar className={"mb-5"} bg="none" expand="lg">
-                    <Navbar.Brand href="#home"><img style={{width: "235px"}} src={logo}/></Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="mr-auto">
-                            <Nav.Link href="#home">Доска почёта</Nav.Link>
-                            <Nav.Link href="#link1">Карта проблем</Nav.Link>
-                            <Nav.Link href="#link">Архив проблем</Nav.Link>
-                            <NavDropdown title="Помощь" id="basic-nav-dropdown">
-                                <NavDropdown.Item href="#action/3.1"></NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2"></NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.3">Архив проблем</NavDropdown.Item>
-                                <NavDropdown.Divider/>
-                                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                            </NavDropdown>
-                        </Nav>
-                        <Form>
-                            <Button variant="btn btn-outline-primary">Войти в личный кабинет</Button>
-                        </Form>
-                    </Navbar.Collapse>
-                </Navbar>
+                <HeaderNav/>
 
                 {/*Page Content*/}
                 <section className="pb-5 pt-5">
@@ -151,20 +78,23 @@ function RegistrationPage() {
                                 <h2 className="font-weight-light"> Регистрация </h2>
 
                                 <div className="pt-3">
+                                    <TextField id="input-with-icon-grid" label={<p>Логин</p>}
+                                               variant="filled" fullWidth onChange={e=>{settextFieldsData({...textFieldsData,...{"login":e.target.value}})}}/>
                                     <TextField id="input-with-icon-grid" label={<p>Фамилия</p>}
-                                               variant="filled" fullWidth/>
+                                               variant="filled" fullWidth onChange={e=>{settextFieldsData({...textFieldsData,...{"surname":e.target.value}})}}/>
                                     <TextField id="input-with-icon-grid" label={<p>Имя</p>}
-                                               variant="filled" fullWidth/>
+                                               variant="filled" fullWidth onChange={e=>{settextFieldsData({...textFieldsData,...{"name":e.target.value}})}}/>
                                     <TextField id="input-with-icon-grid" label={<p>Отчество</p>}
-                                               variant="filled" fullWidth/>
-
+                                               variant="filled" fullWidth onChange={e=>{settextFieldsData({...textFieldsData,...{"patronymic":e.target.value}})}}/>
                                     <TextField id="input-with-icon-grid" label={<p><Phone/> &nbsp; Мобильный номер</p>}
-                                               variant="filled" fullWidth/>
+                                               variant="filled" fullWidth onChange={e=>{settextFieldsData({...textFieldsData,...{"mobilenumber":e.target.value}})}}/>
                                     <TextField id="input-with-icon-grid" label={<p><KeyIcon/> &nbsp; Пароль</p>}
                                                variant="filled"           helperText="Придумайте пароль посложнее и постарайтесь не забыть!"
-                                               fullWidth/>
+                                               fullWidth onChange={e=>{settextFieldsData({...textFieldsData,...{"passwordHash":e.target.value}})}}/>
                                                <p className={"my-2 text-left"}>Аватар</p>
-                                    <Previews/>
+                                    <AvatarDragAndDropUploader onUploaded={(data)=>{settextFieldsData({...textFieldsData,...{"avatarFileFakeUrl":data.fileFakeName}})}} />
+                                    <p className={"my-2 text-left"}>Ваши контактные данные (будут видны всем)</p>
+                                    <SocialNetworkUsing setHeader={(e)=>settextFieldsData({...textFieldsData,...{"socialLink":e}})}/>
 
 
 {/*
@@ -226,7 +156,11 @@ function RegistrationPage() {
                                 <div className="d-flex bd-highlight mt-4">
 
                                     <button type="button" className="btn btn-outline-primary p-2 w-100 bd-highlight"
-                                            style={{}}>Подтвердить
+                                            onClick={()=>registration(
+                                                textFieldsData
+                                            )}
+                                            style={{}}>
+                                        Подтвердить
                                     </button>
 
                                 </div>

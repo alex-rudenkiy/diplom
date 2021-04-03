@@ -1,0 +1,22 @@
+package com.diplom.backend.database.entity.User;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class UserServiceImpl extends UserService {
+
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public Optional<User> save(User users) {
+        return Optional.of(userRepository.save(users));
+    }
+}

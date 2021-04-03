@@ -50,7 +50,14 @@ import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import ModalExampleDimmer from "../components/ModalAgreeText";
 import Modal from "react-bootstrap/Modal";
-
+import HeaderNav from "../components/headerNav";
+import {Map} from "leaflet";
+import {Marker, Popup, TileLayer} from "react-leaflet";
+import {EditableOpenMap} from "../components/Openmap";
+import Alert from "react-bootstrap/Alert";
+import {SelectableHorizontalGallery} from "../components/SelectableGallery";
+import {tileData} from './tileData';
+import useBackendApi from "../logic/BackendApiHook";
 
 const thumbsContainer = {
     display: 'flex',
@@ -124,7 +131,7 @@ function Previews(props) {
     );
 }
 
-function AgreeModal() {
+function AgreeModal(props) {
     const [show, setShow] = useState(false);
 
     return (
@@ -168,8 +175,8 @@ function AgreeModal() {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="secondary">Отказываюсь</Button>
-                    <Button variant="primary">Соглашаюсь и подтверждаю</Button>
+                    <Button variant="secondary" onClick={() => setShow(false)}>Отказываюсь</Button>
+                    <Button variant="primary" onClick={props.onAgree}>Соглашаюсь и подтверждаю</Button>
                 </Modal.Footer>
 
             </Modal>
@@ -192,6 +199,26 @@ const RevealExampleFade = () => {
 }
 
 function OrderingPage() {
+    const {authentication, registration, fileUpload, getUserInfo, checkAuth, logout} = useBackendApi();
+    const [changedAddress, setChangedAddress] = useState("");
+    const [registrationFieldShow, setRegistrationFieldShow] = useState(true);
+    const [ textFieldsData, settextFieldsData ] = useState({});
+
+    useEffect(() => {
+        getUserInfo().then(e => {
+            console.log('id=',e.id, !(e.id>0));
+            e&&setRegistrationFieldShow(!(e.id>0));
+
+        }).catch(
+            c=>{setRegistrationFieldShow(true)
+            }
+            );
+
+    }, []);
+/*
+    useEffect(()=>{alert(changedAddress);},[changedAddress]);
+*/
+
     const StepExampleOrdered = () => (
         <Step.Group ordered>
             <Step completed>
@@ -216,32 +243,33 @@ function OrderingPage() {
         </Step.Group>
     )
 
+    let handleAgree = ()=>{
+        if(registrationFieldShow){
+            registration({
+                ...textFieldsData,
+                ...{
+                    passwordHash:"",
+                    avatarFileFakeUrl:"",
+                    login:"",
+                    description:"",
+                    socialLink:[],
+                    temporal:true,
+                    enabled:false
+                }}).then(
+                    e=>console.log("successful",e)
+            );
+        }else{
+
+        }
+        //alert("ok");
+    };
+
     return (
 
 
         <div className="App">
             <div>
-                <Navbar className={"mb-5"} bg="none" expand="lg">
-                    <Navbar.Brand href="#home"><img style={{width: "235px"}} src={logo}/></Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="mr-auto">
-                            <Nav.Link href="#home">Доска почёта</Nav.Link>
-                            <Nav.Link href="#link1">Карта проблем</Nav.Link>
-                            <Nav.Link href="#link">Архив проблем</Nav.Link>
-                            <NavDropdown title="Помощь" id="basic-nav-dropdown">
-                                <NavDropdown.Item href="#action/3.1"></NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2"></NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.3">Архив проблем</NavDropdown.Item>
-                                <NavDropdown.Divider/>
-                                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                            </NavDropdown>
-                        </Nav>
-                        <Form>
-                            <Button variant="btn btn-outline-primary">Войти в личный кабинет</Button>
-                        </Form>
-                    </Navbar.Collapse>
-                </Navbar>
+                <HeaderNav/>
 
 
                 {/*Page Content*/}
@@ -253,30 +281,28 @@ function OrderingPage() {
                     <div className="container pl-sm-5">
 
                         <div className="row mt-3">
+                            {registrationFieldShow?
                             <div className="col-md-4 col-sm-6 col-xs-6">
                                 <h3 className="font-weight-light text-left"> Основные данные </h3>
 
                                 <div>
                                     <TextField id="input-with-icon-grid" label={<p>Фамилия</p>}
-                                               variant="filled" fullWidth />
+                                               variant="filled" fullWidth onChange={e=>{settextFieldsData({...textFieldsData,...{"surname":e.target.value}})}}/>
                                     <TextField id="input-with-icon-grid" label={<p>Имя</p>}
-                                               variant="filled" fullWidth/>
+                                               variant="filled" fullWidth onChange={e=>{settextFieldsData({...textFieldsData,...{"name":e.target.value}})}}/>
                                     <TextField id="input-with-icon-grid" label={<p>Отчество</p>}
-                                               variant="filled" fullWidth/>
+                                               variant="filled" fullWidth onChange={e=>{settextFieldsData({...textFieldsData,...{"patronymic":e.target.value}})}}/>
 
                                     <TextField id="input-with-icon-grid" label={<p><CallIcon/> &nbsp; Мобильный номер</p>}
-                                               variant="filled" helperText="* Мобильный номер вам нужно указать для того, чтобы вы могли создать временный личный кабинет и контролировать свою заявку"
-                                               fullWidth/>
-
+                                               variant="filled"
+                                               helperText={<p style={{textAlign: "justify"}}>* Мобильный номер вам нужно указать для того, чтобы вы могли создать временный личный кабинет и контролировать свою заявку</p>}
+                                               fullWidth
+                                               onChange={e=>{settextFieldsData({...textFieldsData,...{"mobilenumber":e.target.value}})}}
+                                    />
                                 </div>
+                            </div>:""}
 
-
-
-
-
-                            </div>
-
-                            <div className="col-8">
+                            <div className="flex-fill">
 
                                 <h3 className="font-weight-light text-left"> <EditOutlinedIcon/> Подробное описание проблемы </h3>
 
@@ -289,29 +315,44 @@ function OrderingPage() {
 
                                     />
 
-
                                 </Paper>
-
-
                             </div>
-
-
-
-
-
                         </div>
-
                     </div>
                 </section>
 
                 <section className="pb-5 pt-5">
+                    <div className="container pl-sm-5">
+                        <h3 className="font-weight-light text-left"> <ImageOutlinedIcon/> Местоположение недостатка </h3>
+                        <p className={'text-left'}>{changedAddress.display_name}</p>
+
+                        <div  data-content="The default theme's basic popup removes the pointing arrow." data-variation="basic">
+                            <EditableOpenMap setChangedAddress={setChangedAddress}/>
+                        </div>
+                        <Alert className={'mt-2 text-left'} variant={'warning'}>
+                            <i className="exclamation icon"></i> Постарайтесь указать позицию происшествия как можно <Alert.Link href="#">более точнее</Alert.Link>, от этого будет зависеть дальнейшая судьба вашего обращения.
+                        </Alert>
+                    </div>
+                </section>
+
+                <section className="pb-5 pt-0">
+                    <div className="container pl-sm-5">
+
+                        <h3 className="font-weight-light text-left"> <ImageOutlinedIcon/> Категория происшествия </h3>
+
+                        <SelectableHorizontalGallery tileData={tileData}/>
+
+                    </div>
+                </section>
+
+                <section className="pb-5 pt-0">
                     <div className="container pl-sm-5">
 
                     <h3 className="font-weight-light text-left"> <ImageOutlinedIcon/> Приложения </h3>
 
                         <Previews/>
 
-                        <AgreeModal/>
+                        <AgreeModal onAgree={handleAgree}/>
 
                     </div>
 
